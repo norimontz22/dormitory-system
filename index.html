@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Haven: Dormitory and Housing Management</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap">
+    <style>
+         :root {
+            --bg: #f0f4f6;
+            --pn: #fff;
+            --ink: #16222d;
+            --mu: #667683;
+            --ln: #dce4ea;
+            --side: #13273b;
+            --sideink: #c9d6e2;
+            --tl: #1d8585;
+            --brass: #c5933a;
+            --ok: #2a8a57;
+            --warn: #b97d12;
+            --bad: #bd4139;
+            color-scheme: light
+        }
+        
+        @media(prefers-color-scheme:dark) {
+             :root {
+                --bg: #0e1620;
+                --pn: #16212d;
+                --ink: #e5ebf1;
+                --mu: #92a1af;
+                --ln: #25323f;
+                --side: #0a131d;
+                --tl: #3bb0b0;
+                --brass: #d8a850;
+                --ok: #4fbf85;
+                --warn: #e0a63c;
+                --bad: #ea6f67;
+                color-scheme: dark
+            }
+        }
+        
+        * {
+            box-sizing: border-box
+        }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 15px/1.55 Figtree, system-ui, "Segoe UI", Arial, sans-serif
+        }
+        
+        h1,
+        h2,
+        h3,
+        .brand {
+            font-family: Fraunces, Georgia, serif;
+            font-weight: 600;
+            margin: 0
+        }
+        
+        h1 {
+            font-size: 30px;
+            line-height: 1.2
+        }
+        
+        h2 {
+            font-size: 21px;
+            margin: 30px 0 8px
+        }
+        
+        h3 {
+            font-size: 18px;
+            margin: 0 0 10px
+        }
+        
+        .sub {
+            margin: 4px 0 22px
+        }
+        
+        .mu {
+            color: var(--mu)
+        }
+        
+         :focus-visible {
+            outline: 2px solid var(--brass);
+            outline-offset: 2px
+        }
+        
+        .shell {
+            display: grid;
+            grid-template-columns: 232px 1fr;
+            min-height: 100vh
+        }
+        
+        aside {
+            background: var(--side);
+            color: var(--sideink);
+            padding: 22px 14px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 3px
+        }
+        
+        .brand {
+            font-size: 26px;
+            color: #fff;
+            padding: 0 10px 18px
+        }
+        
+        .brand small {
+            display: block;
+            font: 400 12px Figtree, system-ui;
+            opacity: .7
+        }
+        
+        aside button {
+            background: none;
+            border: 0;
+            color: inherit;
+            text-align: left;
+            padding: 9px 12px;
+            border-radius: 8px;
+            font: inherit;
+            cursor: pointer
+        }
+        
+        aside button:hover {
+            background: rgba(255, 255, 255, .07)
+        }
+        
+        aside button.on {
+            background: rgba(255, 255, 255, .12);
+            color: #fff;
+            box-shadow: inset 3px 0 var(--brass)
+        }
+        
+        aside .sp {
+            flex: 1
+        }
+        
+        main {
+            padding: 30px 36px;
+            max-width: 1120px;
+            width: 100%
+        }
+        
+        button {
+            font: inherit;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--tl);
+            background: var(--tl);
+            color: #fff;
+            cursor: pointer
+        }
+        
+        button.g {
+            background: transparent;
+            color: var(--ink);
+            border-color: var(--ln)
+        }
+        
+        input,
+        select {
+            font: inherit;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--ln);
+            background: var(--pn);
+            color: var(--ink);
+            max-width: 100%
+        }
+        
+        label {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            font-size: 13px;
+            color: var(--mu)
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-end;
+            margin: 0 0 18px
+        }
+        
+        .card {
+            background: var(--pn);
+            border: 1px solid var(--ln);
+            border-radius: 12px;
+            padding: 16px
+        }
+        
+        .facts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            padding: 0
+        }
+        
+        .facts div {
+            padding: 16px 18px;
+            border-left: 1px solid var(--ln)
+        }
+        
+        .facts div:first-child {
+            border-left: 0
+        }
+        
+        .facts b {
+            display: block;
+            font: 600 26px Fraunces, Georgia, serif
+        }
+        
+        .tw {
+            overflow-x: auto;
+            background: var(--pn);
+            border: 1px solid var(--ln);
+            border-radius: 12px
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%
+        }
+        
+        th,
+        td {
+            text-align: left;
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--ln);
+            vertical-align: middle
+        }
+        
+        th {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--mu)
+        }
+        
+        tr:last-child td {
+            border-bottom: 0
+        }
+        
+        .pill {
+            font-size: 12px;
+            padding: 2px 9px;
+            border-radius: 99px;
+            background: color-mix(in srgb, var(--c, var(--mu)) 15%, transparent);
+            color: var(--c, var(--mu));
+            white-space: nowrap
+        }
+        
+        .ok {
+            --c: var(--ok)
+        }
+        
+        .warn {
+            --c: var(--warn)
+        }
+        
+        .bad {
+            --c: var(--bad)
+        }
+        
+        .bd {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 14px
+        }
+        
+        .fl {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 7px 0;
+            border-top: 1px solid var(--ln)
+        }
+        
+        .fl>span {
+            width: 52px;
+            font-size: 13px;
+            flex: none
+        }
+        
+        .tiles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+        
+        .tile {
+            border: 1px solid var(--ln);
+            border-radius: 8px;
+            padding: 4px 8px;
+            min-width: 58px;
+            text-align: center;
+            font-size: 13px
+        }
+        
+        .tile.full {
+            border-color: var(--brass);
+            box-shadow: inset 0 0 0 1px var(--brass)
+        }
+        
+        .tile b {
+            display: block;
+            font-weight: 600
+        }
+        
+        u,
+        s {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin: 0 1.5px;
+            text-decoration: none
+        }
+        
+        u {
+            background: var(--tl)
+        }
+        
+        s {
+            border: 1.5px solid var(--mu)
+        }
+        
+        .login {
+            max-width: 360px;
+            margin: 12vh auto;
+            padding: 0 18px
+        }
+        
+        .login .brand {
+            color: var(--ink);
+            padding: 0 0 4px;
+            font-size: 36px
+        }
+        
+        @media(max-width:800px) {
+            .shell {
+                grid-template-columns: 1fr
+            }
+            aside {
+                position: static;
+                height: auto;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 10px;
+                align-items: center
+            }
+            .brand {
+                padding: 0 10px
+            }
+            .brand small,
+            aside .sp {
+                display: none
+            }
+            aside button {
+                white-space: nowrap
+            }
+            main {
+                padding: 18px
+            }
+        }
+        
+        @media(prefers-reduced-motion:no-preference) {
+            main {
+                animation: in .25s ease-out
+            }
+            @keyframes in {
+                from {
+                    opacity: 0
+                }
+                to {
+                    opacity: 1
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script>
+        const $ = s => document.querySelector(s);
+        const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;'
+        }[c]));
+        const money = n => 'PHP ' + Number(n || 0).toLocaleString('en-PH', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        const ym = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+        const cur = ym(new Date()),
+            today = cur + '-' + String(new Date().getDate()).padStart(2, '0');
+        const so = (a, c) => a.map(x => `<option${x===c?' selected':''}>${x}</option>`).join('');
+        const oo = (a, f) => a.map(x => `<option value="${x.id}">${esc(f(x))}</option>`).join('');
+        const T = (h, rows) => `<div class="tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${h.length}" class="mu">Nothing here yet.</td></tr>`}</tbody></table></div>`;
+const H=(t,s)=>`<h1>${t}</h1><p class="mu sub">${s}</p>`;
+const pill=s=>`<span class="pill ${{Active:'ok',Resolved:'ok',Open:'bad',High:'bad','In Progress':'warn',Medium:'warn'}[s]||''}">${esc(s)}</span>`;
+let db=null,user=null,view='overview',err='';
+const R=id=>db.r.find(x=>x.id==id),P=id=>db.c.find(x=>x.id==id);
+const rn=id=>R(id)?R(id).no:'?',pn=id=>P(id)?P(id).name:'?';
+const actL=pid=>db.l.find(l=>l.rid==pid&&l.status==='Active');
+const M=[['overview','Overview'],['residents','Residents'],['rooms','Rooms'],['leases','Room assignments'],['rent','Rent payments'],['requests','Repair requests'],['reports','Reports']];
+
+async function api(n,b){const r=await fetch('/api/'+n,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b||{})});let j={};try{j=await r.json()}catch(e){}return{ok:r.ok,status:r.status,j}}
+async function load(){const r=await fetch('/api/data');if(r.status===401){user=null;db=null;return}db=await r.json()}
+async function act(n,d){const r=await api(n,d);if(r.status===401)user=null;else if(!r.ok)alert(r.j.error||'Something went wrong.');else await load();render()}
+async function sub(e,n){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+ if(n==='login'){const r=await api('login',d);if(r.ok){user=r.j.user;err='';await load()}else err='Wrong username or password. Try admin / admin123.';render();return false}
+ await act(n,d);return false}
+async function logout(){await api('logout');user=null;db=null;render()}
+
+const board=()=>{if(!db.r.length)return'<p class="mu">No rooms yet. Add one in Rooms.</p>';const b={};db.r.forEach(r=>(b[r.bld]=b[r.bld]||[]).push(r));
+ return`<div class="bd">${Object.keys(b).map(n=>{const fl=[...new Set(b[n].map(r=>r.floor))].sort((a,c)=>c-a);
+ return`<section class="card"><h3>${esc(n)}</h3>${fl.map(f=>`<div class="fl"><span class="mu">Floor ${f}</span><div class="tiles">${b[n].filter(r=>r.floor==f).map(r=>`<div class="tile${r.occ>=r.cap?' full':''}" title="${esc(r.type)}, ${money(r.rate)} per bed"><b>${esc(r.no)}</b>${'<u></u>'.repeat(r.occ)}${'<s></s>'.repeat(Math.max(0,r.cap-r.occ))}</div>`).join('')}</div></div>`).join('')}</section>`}).join('')}</div>`};
+
+const V={
+overview:()=>{const a=db.l.filter(l=>l.status==='Active'),beds=db.r.reduce((s,r)=>s+r.cap,0),got=db.pay.filter(p=>p.period===cur).reduce((s,p)=>s+p.amt,0),
+ due=a.filter(l=>!db.pay.some(p=>p.lid==l.id&&p.period===cur)),req=db.m.filter(m=>m.status!=='Resolved').length;
+ return`${H('Overview','Who is living where, and what needs attention today.')}
+ <div class="card facts">${[['Residents living in',a.length],['Open beds',beds-a.length],['Rent collected this month',money(got)],['Unresolved repair requests',req]].map(x=>`<div><span class="mu">${x[0]}</span><b>${x[1]}</b></div>`).join('')}</div>
+ <h2>Floor map</h2><p class="mu"><u></u> occupied bed &nbsp; <s></s> open bed &nbsp; A gold outline means the room is full.</p>${board()}
+ <h2>Rent still due for ${cur}</h2>${T(['Resident','Room','Monthly rate'],due.slice(0,10).map(l=>[esc(pn(l.rid)),esc(rn(l.room)),money(R(l.room)?R(l.room).rate:0)]))}<p class="mu">${due.length} residents have not paid yet this month.</p>
+ <p class="row"><button class="g" onclick="if(confirm('Replace everything with the demo data?'))act('reset',{demo:1})">Reset demo data</button><button class="g" onclick="if(confirm('Delete all data?'))act('reset',{demo:0})">Clear all data</button></p>`},
+residents:()=>`${H('Residents','Everyone registered with Haven, whether they live here now or have moved out.')}
+ <form class="row" onsubmit="return sub(event,'addR')"><label>Full name<input name="name" required></label><label>Contact number<input name="contact" required></label><label>Email<input name="email" type="email"></label><label>Occupation<input name="job"></label><label>Emergency contact<input name="emerg"></label><button>Add resident</button></form>
+ ${T(['Resident','Room','Occupation','Contact','Email','Emergency contact'],db.c.map(c=>{const l=actL(c.id);return[esc(c.name),l?esc(rn(l.room)):`<span class="mu">${db.l.some(x=>x.rid==c.id)?'Moved out':'Not assigned'}</span>`,esc(c.job),esc(c.contact),esc(c.email),esc(c.emerg)]}))}`,
+rooms:()=>`${H('Rooms','Every room, its rate per bed, and how many beds are taken.')}
+ <form class="row" onsubmit="return sub(event,'addRoom')"><label>Room number<input name="no" size="6" required></label><label>Building<input name="bld" list="bl" required><datalist id="bl">${[...new Set(db.r.map(r=>r.bld))].map(b=>`<option>${esc(b)}</option>`).join('')}</datalist></label><label>Floor<input name="floor" type="number" min="1" value="1" style="width:80px" required></label><label>Type<select name="type">${so(['Single','Double','Quad'])}</select></label><label>Beds<input name="cap" type="number" min="1" value="1" style="width:80px" required></label><label>Rate per bed (PHP)<input name="rate" type="number" min="0" step="0.01" required></label><button>Add room</button></form>
+ ${board()}<h2>Room list</h2>${T(['Room','Building','Floor','Type','Beds taken','Rate per bed'],db.r.map(r=>[esc(r.no),esc(r.bld),r.floor,esc(r.type),r.occ+' of '+r.cap,money(r.rate)]))}`,
+leases:()=>{const free=db.c.filter(c=>!actL(c.id)),open=db.r.filter(r=>r.occ<r.cap);
+ return`${H('Room assignments','Move a resident into a room, or end their stay when they leave. A full room cannot take another resident.')}
+ ${free.length&&open.length?`<form class="row" onsubmit="return sub(event,'assign')"><label>Resident<select name="rid">${oo(free,c=>c.name)}</select></label><label>Room<select name="room_id">${oo(open,r=>r.no+' · '+r.type+' · '+(r.cap-r.occ)+' open')}</select></label><label>Move-in date<input name="start" type="date" value="${today}" required></label><button>Assign room</button></form>`:'<p class="mu">Every resident already has a room, or no beds are open.</p>'}
+ ${T(['Resident','Room','Moved in','Moved out','Status',''],db.l.slice().reverse().map(l=>[esc(pn(l.rid)),esc(rn(l.room)),l.start,l.end||'—',pill(l.status),l.status==='Active'?`<button class="g" onclick="act('endLease',{lid:${l.id}})">End stay</button>`:'']))}`},
+rent:()=>{const a=db.l.filter(l=>l.status==='Active');
+ return`${H('Rent payments','Record rent as residents pay it. Each payment is for one month.')}
+ ${a.length?`<form class="row" onsubmit="return sub(event,'addPay')"><label>Resident<select name="lid">${oo(a,l=>pn(l.rid)+' · '+rn(l.room))}</select></label><label>Amount (PHP)<input name="amt" type="number" min="0.01" step="0.01" required></label><label>For month<input name="period" type="month" value="${cur}" required></label><label>Method<select name="method">${so(['Cash','GCash','Bank transfer'])}</select></label><button>Record payment</button></form>`:''}
+ <p class="mu">Showing the 60 most recent payments.</p>${T(['Paid on','For month','Resident','Room','Amount','Method'],db.pay.slice(-60).reverse().map(p=>{const l=db.l.find(x=>x.id==p.lid);return[p.date,p.period,l?esc(pn(l.rid)):'?',l?esc(rn(l.room)):'?',money(p.amt),esc(p.method)]}))}`},
+requests:()=>`${H('Repair requests','Report a problem in a room and track it until it is fixed.')}
+ ${db.r.length?`<form class="row" onsubmit="return sub(event,'addM')"><label>Room<select name="room_id">${oo(db.r,r=>r.no+' · '+r.bld)}</select></label><label>What is wrong<input name="issue" size="28" required></label><label>Priority<select name="pri">${so(['Low','Medium','High'],'Medium')}</select></label><button>Report problem</button></form>`:''}
+ ${T(['Reported','Room','Problem','Priority','Status'],db.m.slice().reverse().map(m=>[m.date,esc(rn(m.room)),esc(m.issue),pill(m.pri),`<select onchange="act('setM',{id:${m.id},status:this.value})">${so(['Open','In Progress','Resolved'],m.status)}</select>`]))}`,
+reports:()=>{const bl={};db.r.forEach(r=>{const b=bl[r.bld]=bl[r.bld]||{cap:0,occ:0};b.cap+=r.cap;b.occ+=r.occ});
+ const per=[...Array(6)].map((_,k)=>{const n=new Date();return ym(new Date(n.getFullYear(),n.getMonth()-k,1))}),st={};db.m.forEach(m=>st[m.status]=(st[m.status]||0)+1);
+ return`${H('Reports','Occupancy, rent collected and repair progress.')}
+ <h2>Occupancy by building</h2>${T(['Building','Beds','Taken','Occupancy'],Object.keys(bl).map(k=>[esc(k),bl[k].cap,bl[k].occ,Math.round(100*bl[k].occ/bl[k].cap)+'%']))}
+ <h2>Rent collected, last 6 months</h2>${T(['Month','Payments','Total'],per.map(p=>{const x=db.pay.filter(y=>y.period===p);return[p,x.length,money(x.reduce((s,y)=>s+y.amt,0))]}))}
+ <h2>Repair requests by status</h2>${T(['Status','Requests'],Object.keys(st).map(k=>[pill(k),st[k]]))}`}
+};
+
+function render(){const a=$('#app');
+ if(!user){a.innerHTML=`<div class="login"><div class="brand">Haven</div><p class="mu">Dormitory and housing management. Authorized staff only.</p><form onsubmit="return sub(event,'login')" class="row" style="flex-direction:column;align-items:stretch"><label>Username<input name="u" autocapitalize="none" autocomplete="username" required></label><label>Password<input name="p" type="password" autocomplete="current-password" required></label><button>Log in</button>${err?`<span style="color:var(--bad)">${err}</span>`:''}</form><p class="mu">Demo accounts: admin / admin123 or staff / staff123</p></div>`;return}
+ a.innerHTML=`<div class="shell"><aside><div class="brand">Haven<small>Dormitory and housing</small></div>${M.map(m=>`<button class="${m[0]===view?'on':''}" onclick="view='${m[0]}';render()">${m[1]}</button>`).join('')}<div class="sp"></div><button onclick="logout()">Log out (${esc(user)})</button></aside><main>${V[view]()}</main></div>`}
+(async()=>{try{const r=await fetch('/api/me');if(r.ok){user=(await r.json()).user;await load()}}catch(e){}render()})();
+    </script>
+</body>
+
+</html>
