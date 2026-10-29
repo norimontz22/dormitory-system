@@ -12,7 +12,7 @@ from flask import Flask, g, jsonify, request, send_from_directory, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE, "dormhub.db")
+DB_PATH = os.environ.get("DB_PATH", os.path.join(BASE, "dormhub.db"))
 app = Flask(__name__, static_folder=None)
 app.secret_key = os.environ.get("SECRET_KEY", "change-this-secret-key")
 
@@ -230,6 +230,12 @@ def act(action):
         elif action == "addRoom":
             db.execute("INSERT INTO rooms (room_no, building, floor, room_type, capacity, monthly_rate) VALUES (?,?,?,?,?,?)",
                        (d["no"].strip(), d["bld"].strip(), int(d["floor"]), d["type"], int(d["cap"]), float(d["rate"])))
+        elif action == "delRoom":
+            room_id = int(d["id"])
+            db.execute("DELETE FROM payments WHERE lease_id IN (SELECT lease_id FROM leases WHERE room_id = ?)", (room_id,))
+            db.execute("DELETE FROM leases WHERE room_id = ?", (room_id,))
+            db.execute("DELETE FROM maintenance WHERE room_id = ?", (room_id,))
+            db.execute("DELETE FROM rooms WHERE room_id = ?", (room_id,))
         elif action == "assign":
             rid, room_id = int(d["rid"]), int(d["room_id"])
             if db.execute("SELECT 1 FROM leases WHERE resident_id = ? AND status = 'Active'", (rid,)).fetchone():
@@ -242,6 +248,10 @@ def act(action):
                        (rid, room_id, d["start"]))
         elif action == "endLease":
             db.execute("UPDATE leases SET status = 'Ended', end_date = ? WHERE lease_id = ?", (iso(), int(d["lid"])))
+        elif action == "delLease":
+            lid = int(d["id"])
+            db.execute("DELETE FROM payments WHERE lease_id = ?", (lid,))
+            db.execute("DELETE FROM leases WHERE lease_id = ?", (lid,))
         elif action == "addPay":
             db.execute("INSERT INTO payments (lease_id, amount, method, period, date_paid) VALUES (?,?,?,?,?)",
                        (int(d["lid"]), float(d["amt"]), d["method"], d["period"], iso()))
